@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'application'
+}
+
+group 'stanic.devroombot'
+version '1.0-SNAPSHOT'
+
+shadowJar {
+    archiveBaseName.set('DevRoomBot')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
+
+ext.main = 'Main'
+mainClassName = "$group.${main}"
+
+repositories {
+    maven { url "https://jitpack.io" }
+    maven { url "https://maven.enginehub.org/repo/" }
+    maven { url "https://m2.dv8tion.net/releases" }
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    implementation("net.dv8tion:JDA:4.3.0_309") {
+        exclude module: 'opus-java'
+    }
+    implementation "org.mongodb:mongodb-driver:3.12.10"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileJava.options.encoding = 'UTF-8'
