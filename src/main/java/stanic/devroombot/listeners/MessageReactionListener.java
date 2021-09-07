@@ -26,6 +26,8 @@ public class MessageReactionListener extends ListenerAdapter {
         if (new EmoteUtils().isStar(event.getReactionEmote())) {
             StarboardMessage starboardMessage = getStarboardRepository().getMessage(event.getMessageId());
             Message message = event.retrieveMessage().complete();
+            if (message.getAuthor().getId().equals(event.getUser().getId())) return;
+
             int stars = (int) message.getReactions().stream().filter(it -> it != null && new EmoteUtils().isStar(it.getReactionEmote())).count();
 
             if (starboardMessage != null) starboardMessage.setStars(stars + 1);
@@ -40,12 +42,9 @@ public class MessageReactionListener extends ListenerAdapter {
         if (new EmoteUtils().isStar(event.getReactionEmote())) {
             StarboardMessage starboardMessage = getStarboardRepository().getMessage(event.getMessageId());
             Message message = event.retrieveMessage().complete();
-            int stars = (int) message.getReactions().stream().filter(it -> it != null && new EmoteUtils().isStar(it.getReactionEmote())).count();
+            if (message.getAuthor().getId().equals(event.getUser().getId())) return;
 
-            if (getStarboardRepository().getSetting().isDeleteMessageWhenRemoveReaction() && starboardMessage != null) {
-                getStarboardManager().unpinMessage(starboardMessage);
-                return;
-            }
+            int stars = (int) message.getReactions().stream().filter(it -> it != null && new EmoteUtils().isStar(it.getReactionEmote())).count();
 
             if (starboardMessage != null) starboardMessage.setStars(stars - 1);
             else starboardMessage = new StarboardMessage(event.getMessageId(), message.getChannel().getId(), null, stars);

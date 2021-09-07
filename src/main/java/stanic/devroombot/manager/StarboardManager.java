@@ -19,9 +19,8 @@ public class StarboardManager {
     }
 
     public void handleMessageStarsChange(StarboardMessage starboardMessage, Message message) {
-        System.out.println(starboardMessage.getStars());
         if (starboardMessage.getStars() >= getStarboardRepository().getSetting().getStarsRequired()) pinMessage(starboardMessage, message);
-        else unpinMessage(starboardMessage);
+        else if (starboardMessage.getStars() <= 0) unpinMessage(starboardMessage);
     }
 
     public void pinMessage(StarboardMessage starboardMessage, Message message) {
@@ -44,13 +43,13 @@ public class StarboardManager {
         });
     }
     public void unpinMessage(StarboardMessage starboardMessage) {
-        if (getStarboardRepository().getMessage(starboardMessage.getId()) == null) return;
+        if (getStarboardRepository().getMessage(starboardMessage.getId()) == null || !getStarboardRepository().getSetting().isDeleteMessageWhenRemoveReaction()) return;
 
         StarboardSettings settings = getStarboardRepository().getSetting();
         if (settings.getChannelId() == null) return;
 
-        TextChannel channel = getJda().getTextChannelById(starboardMessage.getChannelId());
-        channel.retrieveMessageById(starboardMessage.getId()).complete().delete().queue();
+        TextChannel channel = getJda().getTextChannelById(settings.getChannelId());
+        channel.retrieveMessageById(starboardMessage.getStarboardMessageId()).complete().delete().queue();
         getStarboardRepository().removeMessage(starboardMessage);
     }
 
