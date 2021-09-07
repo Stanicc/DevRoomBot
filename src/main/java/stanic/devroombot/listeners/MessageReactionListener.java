@@ -38,9 +38,9 @@ public class MessageReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         if (new EmoteUtils().isStar(event.getReactionEmote())) {
-            int stars = event.getReaction().getCount();
             StarboardMessage starboardMessage = getStarboardRepository().getMessage(event.getMessageId());
             Message message = event.retrieveMessage().complete();
+            int stars = (int) message.getReactions().stream().filter(it -> it != null && new EmoteUtils().isStar(it.getReactionEmote())).count();
 
             if (getStarboardRepository().getSetting().isDeleteMessageWhenRemoveReaction() && starboardMessage != null) {
                 getStarboardManager().unpinMessage(starboardMessage);

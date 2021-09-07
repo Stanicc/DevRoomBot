@@ -39,10 +39,10 @@ public class Main {
                 .addOption(OptionType.CHANNEL, "channel", "The starboard channel")
                 .queue();
         jda.upsertCommand("setstarsrequired", "Set the stars required to pin a message")
-                .addOption(OptionType.CHANNEL, "stars", "The amount of stars")
+                .addOption(OptionType.INTEGER, "stars", "The amount of stars")
                 .queue();
         jda.upsertCommand("setdmwrr", "Set the delete message when remove message condition")
-                .addOption(OptionType.CHANNEL, "condition", "The condition (true or false)")
+                .addOption(OptionType.BOOLEAN, "condition", "The condition (true or false)")
                 .queue();
     }
 
